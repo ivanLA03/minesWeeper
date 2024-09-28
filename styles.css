@@ -1,0 +1,31 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    transition: all 1s; /* hace las transiciones mas lentas */
+    user-select: none; /* evita que se pueda seleccionar las palabras */
+    background-color: lightsteelblue;
+}
+
+table{
+    background-color: slategray;
+    margin: auto;
+}
+
+td{
+    border: rgba(0, 0, 0, 0.25) 1px solid;
+    text-align: center;
+    color: white;
+    font-size: 70%;
+}
+
+.descubierto{
+    color: blue;
+}
+
+.marcado{
+    color: red;
+}
