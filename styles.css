@@ -23,9 +23,16 @@ td{
 }
 
 .descubierto{
-    color: blue;
+    background-color: blue;
 }
 
 .marcado{
-    color: red;
+    background-color: green;
+}
+.bomba{
+    background-color: red;
+}
+
+.ganador{
+    background-color: green !important;
 }

@@ -1,3 +1,5 @@
+const tableroHTML = document.querySelector('table')
+
 let filas = 20
 let columnas = 20
 let lado = 30
@@ -5,7 +7,7 @@ let lado = 30
 let enJuego = true
 let juegoIniciado = false
 
-let minas = filas * columnas * 0.5
+let minas = filas * columnas * 0.01
 let marcas = 0
 
 let tablero = []
@@ -90,7 +92,7 @@ function agregarEventos(){
             casilla.addEventListener('dblclick', e => {
                 click(casilla, c, f, e)
             })
-            casilla.addEventListener('click', e => {
+            casilla.addEventListener('mouseup', e => {
                 click(casilla, c, f, e)
             })
         }
@@ -106,6 +108,7 @@ function actualizarTablero(){
                 switch(tablero[c][f].valor){
                     case -1:
                         casilla.innerHTML = 'B'
+                        casilla.classList.add('bomba')
                         break
                     case 0:
                         break
@@ -114,8 +117,17 @@ function actualizarTablero(){
                         break
                 }
             }
+            if(tablero[c][f].estado == 'marcado'){
+                casilla.classList.add('marcado')
+                casilla.innerHTML = "f"
+            }
+            if(tablero[c][f].estado == undefined){
+                casilla.innerHTML = ""
+            }
         }
     }
+    verificarPerdedor()
+    verificarGanador()
 }
 
 function click(casilla, c, f, e){
@@ -137,10 +149,14 @@ function click(casilla, c, f, e){
 
             tablero[c][f].estado = 'descubierto'
             juegoIniciado = true
+            if(tablero[c][f].valor == 0){
+                abrirArea(c, f)
+            }
             break
         case 2:
             if(tablero[c][f].estado == 'marcado'){
                 tablero[c][f].estado = undefined
+                casilla.classList.remove('marcado')
                 marcas--
             } else {
                 tablero[c][f].estado = 'marcado'
@@ -151,4 +167,63 @@ function click(casilla, c, f, e){
             break
     }
     actualizarTablero()
+}
+
+function verificarPerdedor(){
+    for(let f = 0; f < filas; f++){
+        for(let c = 0; c < columnas; c++){
+            if(tablero[c][f].valor == -1){
+                if(tablero[c][f].estado == 'descubierto'){
+                    enJuego = false
+                }
+            }
+        }
+    }
+    if(enJuego){
+        return
+    }
+    for(let f = 0; f < filas; f++){
+        for(let c = 0; c < columnas; c++){
+            if(tablero[c][f].valor == -1){
+                let casilla = document.querySelector(`.casilla-${c}-${f}`)
+                casilla.innerHTML = 'B'
+            }
+        }
+    }
+}
+
+function verificarGanador(){
+    for(let f = 0; f < filas; f++){
+        for(let c = 0; c < columnas; c++){
+            if(tablero[c][f].estado != 'descubierto'){
+                if(tablero[c][f].valor == -1){
+                    continue
+                }else{
+                    return
+                }
+            }
+        }
+    }
+    enJuego = false
+    tableroHTML.className = "ganador"
+}
+
+function abrirArea(c, f){
+    for(let i = -1; i <= 1; i++){
+        for(let j = -1; j <= 1; j++){
+            if(i == 0 && j == 0){
+                continue
+            }
+            try {
+                if(tablero[c + i][f + j].estado != 'descubierto'){
+                    if (tablero[c + i][f + j].estado != 'marcado'){
+                        tablero[c + i][f + j].estado = 'descubierto'
+                        if(tablero[c + i][f + j].valor == 0){
+                            abrirArea(c + i, f + j)
+                        }
+                    }
+                }
+            } catch (e) { }
+        }
+    }
 }
