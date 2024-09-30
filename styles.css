@@ -10,6 +10,31 @@ body{
     background-color: lightsteelblue;
 }
 
+.menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 1em;
+}
+
+.nueva-partida{
+    padding: 1em;
+    margin-right: 1em;
+}
+
+.contador-minas{
+    font-size: 20px;
+    margin-left: 1em;
+}
+
+.contador-minas span{
+    font-size: 30px;
+    padding: 0.1em;
+    border-radius: 5px;
+    color: green;
+    background-color: black;
+}
+
 table{
     background-color: slategray;
     margin: auto;
@@ -33,6 +58,6 @@ td{
     background-color: red;
 }
 
-.ganador{
+.ganador .descubierto{
     background-color: green !important;
 }

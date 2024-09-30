@@ -7,7 +7,7 @@ let lado = 30
 let enJuego = true
 let juegoIniciado = false
 
-let minas = filas * columnas * 0.1
+let minas = filas * columnas * 0.15
 let marcas = 0
 
 let tablero = []
@@ -19,6 +19,7 @@ function nuevoJuego(){
     agregarEventos()
     generarTableroJuego()
     actualizarTablero()
+    reiniciarVariables()
 }
 
 function generarTableroJuego(){
@@ -41,6 +42,12 @@ function generarTableroHTML(){
     tableroHTML.innerHTML = html
     tableroHTML.style.width = columnas * lado + 'px'
     tableroHTML.style.height = filas * lado + 'px'
+}
+
+function reiniciarVariables(){
+    marcas = 0
+    enJuego = true
+    juegoIniciado = false
 }
 
 function vaciarTablero(){
