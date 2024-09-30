@@ -15,13 +15,19 @@ let tablero = []
 nuevoJuego()
 
 function nuevoJuego(){
-    generarTablero()
+    generarTableroHTML()
     agregarEventos()
     generarTableroJuego()
     actualizarTablero()
 }
 
-function generarTablero(){
+function generarTableroJuego(){
+    vaciarTablero()
+    ponerMinas()
+    contadoresMinas()
+}
+
+function generarTableroHTML(){
     let html = ''
     for (let f = 0; f < filas; f++){
         html += '<tr>'
@@ -35,12 +41,6 @@ function generarTablero(){
     tableroHTML.innerHTML = html
     tableroHTML.style.width = columnas * lado + 'px'
     tableroHTML.style.height = filas * lado + 'px'
-}
-
-function generarTableroJuego(){
-    vaciarTablero()
-    ponerMinas()
-    contadoresMinas()
 }
 
 function vaciarTablero(){
@@ -89,9 +89,6 @@ function agregarEventos(){
     for (let f = 0; f < filas; f++){
         for(let c = 0; c < columnas; c++){
             let casilla = document.querySelector(`.casilla-${c}-${f}`)
-            casilla.addEventListener('dblclick', e => {
-                click(casilla, c, f, e)
-            })
             casilla.addEventListener('mouseup', e => {
                 click(casilla, c, f, e)
             })
@@ -103,7 +100,7 @@ function actualizarTablero(){
     for (let f = 0; f < filas; f++){
         for(let c = 0; c < columnas; c++){
             let casilla = document.querySelector(`.casilla-${c}-${f}`)
-            if(tablero[c][f].estado === 'descubierto'){
+            if(estaDescubierta(c, f)){
                 casilla.classList.add('descubierto')
                 switch(tablero[c][f].valor){
                     case -1:
@@ -130,50 +127,29 @@ function actualizarTablero(){
     verificarGanador()
 }
 
-function click(casilla, c, f, e){
-    if(!enJuego){
-        return
-    }
-    if(tablero[c][f].estado == 'descubierto'){
-        return
-    }
-    switch(e.button){
-        case 0:
-            if(tablero[c][f].estado == 'marcado'){
-                break
-            }
+function click(casilla, c, f, e) {
+    if (!enJuego || estaDescubierta(c,f)) return
 
-            while(!juegoIniciado && tablero[c][f].valor == -1){
-                generarTableroJuego()
-            }
+    if (e.button === 0 && !estaMarcada(c, f)) {
+        while (!juegoIniciado && tablero[c][f].valor === -1) generarTableroJuego()
 
-            tablero[c][f].estado = 'descubierto'
-            juegoIniciado = true
-            if(tablero[c][f].valor == 0){
-                abrirArea(c, f)
-            }
-            break
-        case 2:
-            if(tablero[c][f].estado == 'marcado'){
-                tablero[c][f].estado = undefined
-                casilla.classList.remove('marcado')
-                marcas--
-            } else {
-                tablero[c][f].estado = 'marcado'
-                marcas++
-            }
-            break
-        default:
-            break
+        tablero[c][f].estado = 'descubierto'
+        juegoIniciado = true
+        if (tablero[c][f].valor === 0) abrirArea(c, f)
+    } else if (e.button === 2) {
+        tablero[c][f].estado = tablero[c][f].estado === 'marcado' ? undefined : 'marcado'
+        casilla.classList.toggle('marcado')
+        marcas += tablero[c][f].estado === 'marcado' ? 1 : -1
     }
-    actualizarTablero()
+
+    actualizarTablero();
 }
 
 function verificarPerdedor(){
     for(let f = 0; f < filas; f++){
         for(let c = 0; c < columnas; c++){
             if(tablero[c][f].valor == -1){
-                if(tablero[c][f].estado == 'descubierto'){
+                if(estaDescubierta(c,f)){
                     enJuego = false
                 }
             }
@@ -190,12 +166,13 @@ function verificarPerdedor(){
             }
         }
     }
+    tableroHTML.style.background = 'red'
 }
 
 function verificarGanador(){
     for(let f = 0; f < filas; f++){
         for(let c = 0; c < columnas; c++){
-            if(tablero[c][f].estado != 'descubierto'){
+            if(!estaDescubierta(c, f)){
                 if(tablero[c][f].valor == -1){
                     continue
                 }else{
@@ -208,22 +185,28 @@ function verificarGanador(){
     tableroHTML.className = "ganador"
 }
 
-function abrirArea(c, f){
-    for(let i = -1; i <= 1; i++){
-        for(let j = -1; j <= 1; j++){
-            if(i == 0 && j == 0){
-                continue
+function abrirArea(c, f) {
+    for (let i = -1; i <= 1; i++) {
+        for (let j = -1; j <= 1; j++) {
+            if (i === 0 && j === 0) continue;
+
+            const casilla = tablero[c + i]?.[f + j];
+            if (casilla && casilla.estado !== 'descubierto' && casilla.estado !== 'marcado') {
+                casilla.estado = 'descubierto';
+                if (casilla.valor === 0) abrirArea(c + i, f + j);
             }
-            try {
-                if(tablero[c + i][f + j].estado != 'descubierto'){
-                    if (tablero[c + i][f + j].estado != 'marcado'){
-                        tablero[c + i][f + j].estado = 'descubierto'
-                        if(tablero[c + i][f + j].valor == 0){
-                            abrirArea(c + i, f + j)
-                        }
-                    }
-                }
-            } catch (e) { }
         }
     }
+}
+
+function esCasillaValida(c, f) {
+    return tablero[c]?.[f]
+}
+
+function estaDescubierta(c, f) {
+    return esCasillaValida(c, f) && tablero[c][f].estado === 'descubierto'
+}
+
+function estaMarcada(c, f) {
+    return esCasillaValida(c, f) && tablero[c][f].estado === 'marcado'
 }
