@@ -7,7 +7,7 @@ let lado = 30
 let enJuego = true
 let juegoIniciado = false
 
-let minas = filas * columnas * 0.15
+let minas = filas * columnas * 0.015
 let marcas = 0
 
 let tablero = []
@@ -15,11 +15,13 @@ let tablero = []
 nuevoJuego()
 
 function nuevoJuego(){
+    tableroHTML.classList.remove('perdedor', 'ganador');
+    tableroHTML.classList.add('iniciado');
+    reiniciarVariables()
     generarTableroHTML()
     agregarEventos()
     generarTableroJuego()
     actualizarTablero()
-    reiniciarVariables()
 }
 
 function generarTableroJuego(){
@@ -51,10 +53,7 @@ function reiniciarVariables(){
 }
 
 function vaciarTablero(){
-    tablero = []
-    for(let c = 0; c < columnas; c++){
-        tablero.push([])
-    }
+    tablero = Array(columnas).fill().map(() => [])
 }
 
 function ponerMinas(){
@@ -132,6 +131,7 @@ function actualizarTablero(){
     }
     verificarPerdedor()
     verificarGanador()
+    actualizarMinas()
 }
 
 function click(casilla, c, f, e) {
@@ -173,7 +173,8 @@ function verificarPerdedor(){
             }
         }
     }
-    tableroHTML.style.background = 'red'
+    tableroHTML.classList.remove('iniciado');
+    tableroHTML.classList.add('perdedor');
 }
 
 function verificarGanador(){
@@ -189,7 +190,8 @@ function verificarGanador(){
         }
     }
     enJuego = false
-    tableroHTML.className = "ganador"
+    tableroHTML.classList.remove('iniciado');
+    tableroHTML.classList.add('ganador');
 }
 
 function abrirArea(c, f) {
@@ -216,4 +218,9 @@ function estaDescubierta(c, f) {
 
 function estaMarcada(c, f) {
     return esCasillaValida(c, f) && tablero[c][f].estado === 'marcado'
+}
+
+function actualizarMinas(){
+    let panel = document.querySelector(".minas")
+    panel.innerHTML = minas - marcas
 }

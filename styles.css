@@ -20,6 +20,7 @@ body{
 .nueva-partida{
     padding: 1em;
     margin-right: 1em;
+    cursor: pointer;
 }
 
 .contador-minas{
@@ -36,8 +37,8 @@ body{
 }
 
 table{
-    background-color: slategray;
     margin: auto;
+    margin-bottom: 3rem;
 }
 
 td{
@@ -45,19 +46,36 @@ td{
     text-align: center;
     color: white;
     font-size: 70%;
+    box-shadow: inset 3px 3px 0 0 rgba(255, 255, 255, 0.5),
+                inset -3px -3px 0 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.iniciado{
+    background-color: slategray;
 }
 
 .descubierto{
-    background-color: blue;
+    box-shadow: none;
+    cursor: default;
 }
 
 .marcado{
     background-color: green;
 }
-.bomba{
+
+.perdedor{
     background-color: red;
 }
 
-.ganador .descubierto{
-    background-color: green !important;
+.perdedor .descubierto{
+    background-color: red;
+}
+
+.ganador{
+    background-color: green;
+}
+
+.ganador .marcado{
+    background-color: red;
 }
