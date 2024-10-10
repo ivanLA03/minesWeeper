@@ -111,7 +111,6 @@ function actualizarTablero(){
                 casilla.classList.add('descubierto')
                 switch(tablero[c][f].valor){
                     case -1:
-                        casilla.innerHTML = 'B'
                         casilla.classList.add('bomba')
                         break
                     case 0:
@@ -123,7 +122,12 @@ function actualizarTablero(){
             }
             if(tablero[c][f].estado == 'marcado'){
                 casilla.classList.add('marcado')
-                casilla.innerHTML = "f"
+                let img = document.createElement('img');
+                casilla.innerHTML = ""
+                img.src = 'img/bandera.png';
+                img.width = 25;
+                img.height = 25;
+                casilla.appendChild(img)
             }
             if(tablero[c][f].estado == undefined){
                 casilla.innerHTML = ""
@@ -170,7 +174,12 @@ function verificarPerdedor(){
         for(let c = 0; c < columnas; c++){
             if(tablero[c][f].valor == -1){
                 let casilla = document.querySelector(`.casilla-${c}-${f}`)
-                casilla.innerHTML = 'B'
+                let img = document.createElement('img');
+                casilla.innerHTML = ''
+                img.src = 'img/mina.png';
+                img.width = 25;
+                img.height = 25;
+                casilla.appendChild(img)
             }
         }
     }
