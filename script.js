@@ -7,7 +7,7 @@ let lado = 30
 let enJuego = true
 let juegoIniciado = false
 
-let minas = filas * columnas * 0.15
+let minas = filas * columnas * 0.1
 let marcas = 0
 
 let tablero = []
@@ -17,6 +17,7 @@ nuevoJuego()
 function nuevoJuego(){
     tableroHTML.classList.remove('perdedor', 'ganador');
     tableroHTML.classList.add('iniciado');
+      document.querySelector('.mr').src = 'img/mr-incredible-feliz.jpg'
     reiniciarVariables()
     generarTableroHTML()
     agregarEventos()
@@ -175,6 +176,7 @@ function verificarPerdedor(){
     }
     tableroHTML.classList.remove('iniciado');
     tableroHTML.classList.add('perdedor');
+    document.querySelector('.mr').src = 'img/mr-incredible-cursed.jpg'
 }
 
 function verificarGanador(){
@@ -192,6 +194,7 @@ function verificarGanador(){
     enJuego = false
     tableroHTML.classList.remove('iniciado');
     tableroHTML.classList.add('ganador');
+    document.querySelector('.mr').src = 'img/mr-incredible-lentes.jpg'
 }
 
 function abrirArea(c, f) {

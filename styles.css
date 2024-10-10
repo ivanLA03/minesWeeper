@@ -18,9 +18,22 @@ body{
 }
 
 .nueva-partida{
-    padding: 1em;
-    margin-right: 1em;
-    cursor: pointer;
+    height: 4em;
+    width: 4em;
+    border: 4px solid black;
+    border-left: solid rgb(107, 105, 105);
+    border-top: solid rgb(107, 105, 105);
+}
+
+.nueva-partida:active{
+    border: 4px solid black;
+    border-right: solid rgb(107, 105, 105);
+    border-bottom: solid rgb(107, 105, 105);
+}
+
+.nueva-partida img{
+    height: 100%;
+    width: 100%;
 }
 
 .contador-minas{
