@@ -7,7 +7,7 @@ let lado = 30
 let enJuego = true
 let juegoIniciado = false
 
-let minas = filas * columnas * 0.03
+let minas = filas * columnas * 0.1
 let marcas = 0
 
 let tablero = []
