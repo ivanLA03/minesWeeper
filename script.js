@@ -97,7 +97,16 @@ function agregarEventos(){
         for(let c = 0; c < columnas; c++){
             let casilla = document.querySelector(`.casilla-${c}-${f}`)
             casilla.addEventListener('mouseup', e => {
-                click(casilla, c, f, e)
+                clickTimeout = setTimeout(() => {
+                    click(casilla, c, f, e);
+                }, 150);
+            })
+            casilla.addEventListener('dblclick', () => {
+                clearTimeout(clickTimeout);
+                if (!enJuego || estaDescubierta(c,f)) return
+                tablero[c][f].estado = tablero[c][f].estado === 'marcado' ? undefined : 'marcado'
+                casilla.classList.toggle('marcado')
+                marcas += tablero[c][f].estado === 'marcado' ? 1 : -1
             })
         }
     }
